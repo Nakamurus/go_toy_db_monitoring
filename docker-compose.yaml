@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: test
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./api:/app
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+volumes:
+  postgres-data:
